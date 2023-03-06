@@ -123,27 +123,14 @@ class SingleFoodSearchProblem:
     def goalTest(self, state: tuple):
         return 'Stop' in state[0]
 
-    def pathCost(self, expanded: list):
-        if self.goalTest(expanded):
-            self.setNode([])
-            path = []
-            path.append(expanded[-1])
+    def pathCost(self, state: tuple):
+        if 'Stop' in state[0]:
             cost = 0
-            curr = expanded.pop(-1)
-            while expanded:
-                node_check = expanded.pop(-1)
-                self.successor(node_check)
-                for state in self.getNode():
-                    if state[1] == curr[1]:
-                        print('state[1] =', state[1])
-                        print('curr[1] =', curr[1])
-                        path.append(node_check)
-                        cost += 1
-                        curr = expanded.pop(-1)
-                self.setNode([])
-            path.reverse()
-
-            return path
+            for i in range(state[2].shape[0]):
+                for j in range(state[2].shape[1]):
+                    if state[2][i][j] == -1:
+                        cost+=1
+            return cost+1
         return 'No path cost because no path to goal'
 
     def readMaze(self):
@@ -228,7 +215,7 @@ class SingleFoodSearchProblem:
                     state[2][i + 1][j] = -1
                     self.node.append(('Xuống', (i + 1, j), state[2].copy()))
                     state[2][i + 1][j] = 1
-                    
+
                 if state[2][i + 1][j] == 3:
                     return self.node.append(('Xuống,Stop', (i + 1, j), state[2].copy()))
 
@@ -266,13 +253,14 @@ expanded.append('Start')
 while True:
     if q.empty() or sfsp.goalTest(q.front()):
         sfsp.printMaze(q.front())
-
+        print('Cost =',sfsp.pathCost(q.front()))
         break
 
     sfsp.printMaze(q.front())
+    
     sfsp.successor(q.dequeue())
     for state in sfsp.getNode():
         q.enqueue(state)
-        expanded.append(state[0])
 
+   
 
