@@ -210,16 +210,7 @@ class SingleFoodSearchProblem:
                     return self.node.append(('Stop',(i,j+1),state[2]))
                         
             if i > 0 and i <= state[2].shape[0] - 2:
-                # v
-                if state[2][i+1][j] == 1:
-                    state[2][i+1][j] = -1
-                    
-                    self.node.append(('Xuống',(i+1,j),state[2]))
-                    
-                    
-                if state[2][i+1][j] == 3:
-                    
-                    return self.node.append(('Stop',(i+1,j),state[2]))
+                
                 # ^
                 if state[2][i-1][j] == 1:
                     state[2][i-1][j] = -1
@@ -230,6 +221,15 @@ class SingleFoodSearchProblem:
                 if state[2][i-1][j] == 3:
                     
                     return self.node.append(('Stop',(i-1,j),state[2]))
+                
+                # v
+                if state[2][i+1][j] == 1:
+                    state[2][i+1][j] = -1
+                    
+                    self.node.append(('Xuống',(i+1,j),state[2]))
+                if state[2][i+1][j] == 3:
+                    
+                    return self.node.append(('Stop',(i+1,j),state[2]))
 
     def printMaze(self,state):
         
