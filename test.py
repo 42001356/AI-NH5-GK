@@ -238,7 +238,7 @@ class SingleFoodSearchProblem:
         for i in range(matrix.shape[0]):
             for j in range(matrix.shape[1]):
                 if matrix[i][j] == 0:
-                    matrix_test+='%'
+                    matrix_test+=colored('%','white')
                 if matrix[i][j] == 1:
                     matrix_test+=' '
                 if matrix[i][j] == -1:
