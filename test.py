@@ -181,6 +181,7 @@ class SingleFoodSearchProblem:
                         return 0
         
     def successor(self,state):
+        self.node = []
         self.state = state
         if state[0] != 'Stop':
             i = state[1][0]
@@ -272,5 +273,5 @@ while True:
         q.enqueue(state)
         expanded.append(state[0])
     print(expanded)
-    sfsp.setNode([])
+    
     
