@@ -118,7 +118,7 @@ class SingleFoodSearchProblem:
         self.initial_state = initial_state
     
     def goalTest(self,expanded: list):
-        return expanded[-1][0] == 'Stop'
+        return expanded[-1] == 'Stop'
     
     def pathCost(self,expanded: list):
         if self.goalTest(expanded):
@@ -181,53 +181,54 @@ class SingleFoodSearchProblem:
                         return 0
         
     def successor(self,state):
+        self.state = state
         if state[0] != 'Stop':
             i = state[1][0]
             j = state[1][1]
             
-            if state[2][i][j] == 2 or state[2][i][j] == 5:
-                if j > 0 and j <= state[2].shape[1] - 2:
-                    # <-
-                    if state[2][i][j-1] == 1:
-                        state[2][i][j-1] = 5
-                        state[2][i][j] = -1
-                        self.node.append(('Trái',(i,j-1),state[2]))
+            if j > 0 and j <= state[2].shape[1] - 2:
+                # <-
+                if state[2][i][j-1] == 1:
+                    state[2][i][j-1] = -1
+                    
+                    self.node.append(('Trái',(i,j-1),state[2]))
+                    
+                    
+                    
+                if state[2][i][j-1] == 3:
+                    return self.node.append(('Stop',(i,j-1),state[2]))
+                # ->
+                if state[2][i][j+1] == 1:
+                    state[2][i][j+1] = -1
+                   
+                    self.node.append(('Phải',(i,j+1),state[2]))
+                    
+                    
+                    
+                if state[2][i][j+1] == 3:
+                    return self.node.append(('Stop',(i,j+1),state[2]))
+                        
+            if i > 0 and i <= state[2].shape[0] - 2:
+                # v
+                if state[2][i+1][j] == 1:
+                    state[2][i+1][j] = -1
+                    
+                    self.node.append(('Xuống',(i+1,j),state[2]))
+                    
+                    
+                if state[2][i+1][j] == 3:
+                    
+                    return self.node.append(('Stop',(i+1,j),state[2]))
+                # ^
+                if state[2][i-1][j] == 1:
+                    state[2][i-1][j] = -1
+                    
+                    self.node.append(('Lên',(i-1,j),state[2]))
                         
                         
-                        
-                    if state[2][i][j-1] == 3:
-                        return self.node.append(('Stop',(i,j-1),state[2]))
-                    # ->
-                    if state[2][i][j+1] == 1:
-                        state[2][i][j+1] = 5
-                        state[2][i][j] = -1
-                        self.node.append(('Phải',(i,j+1),state[2]))
-                        
-                        
-                        
-                    if state[2][i][j+1] == 3:
-                        return self.node.append(('Stop',(i,j+1),state[2]))
-                            
-                    if i > 0 and i < state[2].shape[0] - 2:
-                        # v
-                        if state[2][i+1][j] == 1:
-                            state[2][i+1][j] = 5
-                            state[2][i][j] = -1
-                            self.node.append(('Xuống',(i+1,j),state[2]))
-                            
-                            
-                        if state[2][i+1][j] == 3:
-                            return self.node.append(('Stop',(i+1,j),state[2]))
-                        # ^
-                        if state[2][i-1][j] == 1:
-                            state[2][i-1][j] = 5
-                            state[2][i][j] = -1
-                            self.node.append(('Lên',(i-1,j),state[2]))
-                            
-                            
-                            
-                        if state[2][i-1][j] == 3:
-                            return self.node.append(('Stop',(i-1,j),state[2]))
+                if state[2][i-1][j] == 3:
+                    
+                    return self.node.append(('Stop',(i-1,j),state[2]))
 
     def printMaze(self,state):
         
@@ -237,11 +238,11 @@ class SingleFoodSearchProblem:
         for i in range(matrix.shape[0]):
             for j in range(matrix.shape[1]):
                 if matrix[i][j] == 0:
-                    matrix_test+=colored('%','white')
+                    matrix_test+='%'
                 if matrix[i][j] == 1:
                     matrix_test+=' '
-                if matrix[i][j] == -1 or matrix[i][j] == 5:
-                    matrix_test+=colored('-','red',attrs=['blink'])
+                if matrix[i][j] == -1:
+                    matrix_test+=colored('-','red')
                 if i == self.initial_state[1][0] and j == self.initial_state[1][1]:
                     matrix_test+=colored('P','blue',attrs=['reverse','bold'])
                 if matrix[i][j] == 3:
@@ -249,25 +250,27 @@ class SingleFoodSearchProblem:
                 if matrix[i][j] == 4:
                     matrix_test+='\n'
         
+        
         print(matrix_test)
-        print(state)
 
 q = Queue()    
 sfsp = SingleFoodSearchProblem()
 sfsp.readMaze()
-expanded = list()
+expanded = []
 q.enqueue(sfsp.getInitialState())
-expanded.append(sfsp.getInitialState())
+expanded.append('Start')
 while True:
     if q.empty() or sfsp.goalTest(expanded):
-        print(expanded[-1])
-        sfsp.pathCost(expanded)
+        sfsp.printMaze(q.front())
+        
         break
     
     sfsp.printMaze(q.front())
     sfsp.successor(q.dequeue())
     for state in sfsp.getNode():
+        
         q.enqueue(state)
-        expanded.append(state)
+        expanded.append(state[0])
+    print(expanded)
     sfsp.setNode([])
     
