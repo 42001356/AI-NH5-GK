@@ -197,6 +197,7 @@ class SingleFoodSearchProblem:
                     state[2][i][j - 1] = -1
 
                     self.node.append(('Trái', (i, j - 1), state[2].copy()))
+                    state[2][i][j - 1] = 1
 
                 if state[2][i][j - 1] == 3:
                     return self.node.append(('Trái,Stop', (i, j - 1), state[2].copy()))
@@ -205,6 +206,7 @@ class SingleFoodSearchProblem:
                     state[2][i][j + 1] = -1
 
                     self.node.append(('Phải', (i, j + 1), state[2].copy()))
+                    state[2][i][j + 1] = 1
 
                 if state[2][i][j + 1] == 3:
                     return self.node.append(('Phải,Stop', (i, j + 1), state[2].copy()))
@@ -216,6 +218,7 @@ class SingleFoodSearchProblem:
                     state[2][i - 1][j] = -1
 
                     self.node.append(('Lên', (i - 1, j), state[2].copy()))
+                    state[2][i - 1][j] = 1
 
                 if state[2][i - 1][j] == 3:
                     return self.node.append(('Lên,Stop', (i - 1, j), state[2].copy()))
@@ -223,8 +226,9 @@ class SingleFoodSearchProblem:
                 # v
                 if state[2][i + 1][j] == 1:
                     state[2][i + 1][j] = -1
-
                     self.node.append(('Xuống', (i + 1, j), state[2].copy()))
+                    state[2][i + 1][j] = 1
+                    
                 if state[2][i + 1][j] == 3:
                     return self.node.append(('Xuống,Stop', (i + 1, j), state[2].copy()))
 
