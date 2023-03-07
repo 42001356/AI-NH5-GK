@@ -220,7 +220,9 @@ def bfs(problem: SingleFoodSearchProblem):
     turn = 0
     q.enqueue(problem.getInitialState())
     while True:
-        if q.empty() or problem.goalTest(q.front()):
+        if q.empty():
+            raise 'No path because cant find goal'
+        if problem.goalTest(q.front()):
             for i in q.front()[1].split(","):
                 path.append(i)
             return ('\n-----BFS-----\n',path, q.front(), problem.pathCost(q.front()), turn)
@@ -237,7 +239,9 @@ def dfs(problem: SingleFoodSearchProblem):
     turn = 0
     s.push(problem.getInitialState())
     while True:
-        if s.empty() or problem.goalTest(s.peek()):
+        if s.empty():
+            raise 'No path because cant find goal'
+        if problem.goalTest(s.peek()):
             for i in s.peek()[1].split(","):
                 path.append(i)
             return ('\n-----DFS-----\n',path, s.peek(), problem.pathCost(s.peek()), turn)
@@ -254,7 +258,9 @@ def ucs(problem: SingleFoodSearchProblem):
     turn = 0
     pq.enqueue(problem.getInitialState())
     while True:
-        if pq.empty() or problem.goalTest(pq.getPriority()):
+        if pq.empty():
+            raise 'No path because cant find goal'
+        if problem.goalTest(pq.getPriority()):
             for i in pq.getPriority()[1].split(","):
                 path.append(i)
             return('\n-----UCS-----\n', path, pq.getPriority(), problem.pathCost(pq.getPriority()), turn)
