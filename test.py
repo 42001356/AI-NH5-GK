@@ -133,10 +133,9 @@ class SingleFoodSearchProblem:
             return cost
         return 'No path cost because no path to goal'
 
-    def readMaze(self):
+    def readMaze(self, filename):
         i = 0
         number_of_cells = 0
-        filename = r'C:\Users\QUANG\OneDrive\Máy tính\input.txt'
         if os.path.exists(filename):
             with open(filename) as f:
                 for line in f:
@@ -171,59 +170,45 @@ class SingleFoodSearchProblem:
                         return 0
 
     def successor(self, state):
-
         self.node = []
         self.state = state
         if state[0] != 'Stop':
             i = state[1][0]
             j = state[1][1]
-
             if j > 0 and j <= state[2].shape[1] - 2:
                 # <-
                 if state[2][i][j - 1] == 1:
                     state[2][i][j - 1] = -1
-
-                    self.node.append((state[0] + ',Trái', (i, j - 1), state[2].copy()))
+                    self.node.append((state[0] + ',W', (i, j - 1), state[2].copy()))
                     state[2][i][j - 1] = 1
-
                 if state[2][i][j - 1] == 3:
-                    return self.node.append((state[0] + ',Trái,Stop', (i, j - 1), state[2].copy()))
+                    return self.node.append((state[0] + ',W,Stop', (i, j - 1), state[2].copy()))
                 # ->
                 if state[2][i][j + 1] == 1:
                     state[2][i][j + 1] = -1
-
-                    self.node.append((state[0] + ',Phải', (i, j + 1), state[2].copy()))
+                    self.node.append((state[0] + ',E', (i, j + 1), state[2].copy()))
                     state[2][i][j + 1] = 1
-
                 if state[2][i][j + 1] == 3:
-                    return self.node.append((state[0] + ',Phải,Stop', (i, j + 1), state[2].copy()))
-
+                    return self.node.append((state[0] + ',E, Stop', (i, j + 1), state[2].copy()))
             if i > 0 and i <= state[2].shape[0] - 2:
-
                 # ^
                 if state[2][i - 1][j] == 1:
                     state[2][i - 1][j] = -1
-
-                    self.node.append((state[0] + ',Lên', (i - 1, j), state[2].copy()))
+                    self.node.append((state[0] + ',N', (i - 1, j), state[2].copy()))
                     state[2][i - 1][j] = 1
-
                 if state[2][i - 1][j] == 3:
-                    return self.node.append((state[0] + ',Lên,Stop', (i - 1, j), state[2].copy()))
-
+                    return self.node.append((state[0] + ',N,Stop', (i - 1, j), state[2].copy()))
                 # v
                 if state[2][i + 1][j] == 1:
                     state[2][i + 1][j] = -1
-                    self.node.append((state[0] + ',Xuống', (i + 1, j), state[2].copy()))
+                    self.node.append((state[0] + ',S', (i + 1, j), state[2].copy()))
                     state[2][i + 1][j] = 1
-
                 if state[2][i + 1][j] == 3:
-                    return self.node.append((state[0] + ',Xuống,Stop', (i + 1, j), state[2].copy()))
+                    return self.node.append((state[0] + ',S,Stop', (i + 1, j), state[2].copy()))
 
     def printMaze(self, state):
-
         matrix_test = ''
         matrix = state[2]
-
         for i in range(matrix.shape[0]):
             for j in range(matrix.shape[1]):
                 if matrix[i][j] == 0:
@@ -238,30 +223,35 @@ class SingleFoodSearchProblem:
                     matrix_test += colored('.', 'green', attrs=['reverse', 'bold'])
                 if matrix[i][j] == 4:
                     matrix_test += '\n'
-
-        print(state[0])
+        
         print(matrix_test)
 
+# BFS
+def bfs(problem: SingleFoodSearchProblem):
+    print('-----BFS-----')
+    q = Queue()
+    expanded = []
+    path = []
+    q.enqueue(problem.getInitialState())
+    expanded.append('Start')
+    while True:
+        if q.empty() or problem.goalTest(q.front()):
+            problem.printMaze(q.front())
+            print('Cost =',problem.pathCost(q.front()))
+            for i in q.front()[0].split(","):
+                path.append(i)
+            return path
+        
+        problem.successor(q.dequeue())
+        for state in problem.getNode():
+            q.enqueue(state)
+        expanded.append(q.front()[0])
 
-
-q = Queue()
-sfsp = SingleFoodSearchProblem()
-sfsp.readMaze()
-expanded = []
-q.enqueue(sfsp.getInitialState())
-expanded.append('Start')
-while True:
-    if q.empty() or sfsp.goalTest(q.front()):
-        sfsp.printMaze(q.front())
-        print('Cost =',sfsp.pathCost(q.front()))
-        break
-
-    sfsp.printMaze(q.front())
-    
-    sfsp.successor(q.dequeue())
-    for state in sfsp.getNode():
-        q.enqueue(state)
-    expanded.append(q.front()[0])
-
-   
+# main
+problem = SingleFoodSearchProblem()
+filename = r'C:\Users\QUANG\OneDrive\Máy tính\input.txt'
+problem.readMaze(filename)
+bfs = bfs(problem)
+for path in [bfs]:
+    print(path)
 
