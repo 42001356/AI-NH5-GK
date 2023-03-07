@@ -2,7 +2,8 @@ import os
 import numpy as np
 from termcolor import colored
 import time
-
+import colorama
+colorama.just_fix_windows_console()
 
 # Stack
 class Stack:
@@ -12,14 +13,14 @@ class Stack:
     def empty(self):
         return len(self.items) == 0
 
-    def push(self, item):
-        self.items.insert(0,item)
+    def push(self, state: tuple):
+        self.items.append(state)
 
     def pop(self):
-        return self.items.pop(0)
+        return self.items.pop()
 
     def peek(self):
-        return self.items[0]
+        return self.items[-1]
 
     def size(self):
         return len(self.items)
@@ -206,7 +207,7 @@ class SingleFoodSearchProblem:
         for i in range(matrix.shape[0]):
             for j in range(matrix.shape[1]):
                 if matrix[i][j] == 0:
-                    matrix_test += colored('%', 'white')
+                    matrix_test += '%'
                 if matrix[i][j] == 1:
                     matrix_test += ' '
                 if matrix[i][j] == -1:
