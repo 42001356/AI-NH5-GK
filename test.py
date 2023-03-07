@@ -251,6 +251,7 @@ def dfs(problem: SingleFoodSearchProblem):
                 path.append(i)
             return ('\n-----DFS-----\n',path, s.peek(),problem.pathCost(s.peek()),turn)
         problem.successor(s.pop())
+        problem.getNode().reverse()
         for state in problem.getNode():
             s.push(state)
         turn+=1
