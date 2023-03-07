@@ -1,2 +1,2 @@
-a = [(1,2),(3,4)]
-print(a.pop(0))
+a = 'dfdsf,stop'
+print(a[6:])

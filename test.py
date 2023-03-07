@@ -121,16 +121,16 @@ class SingleFoodSearchProblem:
         self.initial_state = initial_state
 
     def goalTest(self, state: tuple):
-        return 'Stop' in state[0]
+        return state[0][len(state[0]) - 4:] == 'Stop'
 
     def pathCost(self, state: tuple):
         if 'Stop' in state[0]:
             cost = 0
             for i in range(state[2].shape[0]):
                 for j in range(state[2].shape[1]):
-                    if state[2][i][j] == -1:
+                    if state[2][i][j] == -1 or state[2][i][j] == 3:
                         cost+=1
-            return cost+1
+            return cost
         return 'No path cost because no path to goal'
 
     def readMaze(self):
@@ -183,20 +183,20 @@ class SingleFoodSearchProblem:
                 if state[2][i][j - 1] == 1:
                     state[2][i][j - 1] = -1
 
-                    self.node.append(('Trái', (i, j - 1), state[2].copy()))
+                    self.node.append((state[0] + ',Trái', (i, j - 1), state[2].copy()))
                     state[2][i][j - 1] = 1
 
                 if state[2][i][j - 1] == 3:
-                    return self.node.append(('Trái,Stop', (i, j - 1), state[2].copy()))
+                    return self.node.append((state[0] + ',Trái,Stop', (i, j - 1), state[2].copy()))
                 # ->
                 if state[2][i][j + 1] == 1:
                     state[2][i][j + 1] = -1
 
-                    self.node.append(('Phải', (i, j + 1), state[2].copy()))
+                    self.node.append((state[0] + ',Phải', (i, j + 1), state[2].copy()))
                     state[2][i][j + 1] = 1
 
                 if state[2][i][j + 1] == 3:
-                    return self.node.append(('Phải,Stop', (i, j + 1), state[2].copy()))
+                    return self.node.append((state[0] + ',Phải,Stop', (i, j + 1), state[2].copy()))
 
             if i > 0 and i <= state[2].shape[0] - 2:
 
@@ -204,20 +204,20 @@ class SingleFoodSearchProblem:
                 if state[2][i - 1][j] == 1:
                     state[2][i - 1][j] = -1
 
-                    self.node.append(('Lên', (i - 1, j), state[2].copy()))
+                    self.node.append((state[0] + ',Lên', (i - 1, j), state[2].copy()))
                     state[2][i - 1][j] = 1
 
                 if state[2][i - 1][j] == 3:
-                    return self.node.append(('Lên,Stop', (i - 1, j), state[2].copy()))
+                    return self.node.append((state[0] + ',Lên,Stop', (i - 1, j), state[2].copy()))
 
                 # v
                 if state[2][i + 1][j] == 1:
                     state[2][i + 1][j] = -1
-                    self.node.append(('Xuống', (i + 1, j), state[2].copy()))
+                    self.node.append((state[0] + ',Xuống', (i + 1, j), state[2].copy()))
                     state[2][i + 1][j] = 1
 
                 if state[2][i + 1][j] == 3:
-                    return self.node.append(('Xuống,Stop', (i + 1, j), state[2].copy()))
+                    return self.node.append((state[0] + ',Xuống,Stop', (i + 1, j), state[2].copy()))
 
     def printMaze(self, state):
 
@@ -261,6 +261,7 @@ while True:
     sfsp.successor(q.dequeue())
     for state in sfsp.getNode():
         q.enqueue(state)
+    expanded.append(q.front()[0])
 
    
 
