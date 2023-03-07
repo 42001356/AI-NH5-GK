@@ -96,12 +96,6 @@ class SingleFoodSearchProblem:
         self.node = list()
         self.initial_state = tuple()
 
-    def setMatrix(self, matrix):
-        self.matrix = matrix
-
-    def getMatrix(self):
-        return self.matrix
-
     def getState(self):
         return self.state
 
@@ -111,13 +105,13 @@ class SingleFoodSearchProblem:
     def getInitialState(self):
         return self.initial_state
 
-    def setState(self, state):
+    def setState(self, state: tuple):
         self.state = state
 
-    def setNode(self, node):
+    def setNode(self, node: list):
         self.node = node
 
-    def setInitialState(self, initial_state):
+    def setInitialState(self, initial_state: tuple):
         self.initial_state = initial_state
 
     def goalTest(self, state: tuple):
@@ -226,32 +220,50 @@ class SingleFoodSearchProblem:
         
         print(matrix_test)
 
+
 # BFS
 def bfs(problem: SingleFoodSearchProblem):
-    print('-----BFS-----')
     q = Queue()
-    expanded = []
     path = []
+    turn = 0
     q.enqueue(problem.getInitialState())
-    expanded.append('Start')
     while True:
         if q.empty() or problem.goalTest(q.front()):
-            problem.printMaze(q.front())
-            print('Cost =',problem.pathCost(q.front()))
             for i in q.front()[0].split(","):
                 path.append(i)
-            return path
-        
+            return ('\n-----BFS-----\n',path, q.front(),problem.pathCost(q.front()),turn)
         problem.successor(q.dequeue())
         for state in problem.getNode():
             q.enqueue(state)
-        expanded.append(q.front()[0])
+        turn+=1
+
+
+# DFS
+def dfs(problem: SingleFoodSearchProblem):
+    s = Stack()
+    path = []
+    turn = 0
+    s.push(problem.getInitialState())
+    while True:
+        if s.empty() or problem.goalTest(s.peek()):
+            for i in s.peek()[0].split(","):
+                path.append(i)
+            return ('\n-----DFS-----\n',path, s.peek(),problem.pathCost(s.peek()),turn)
+        problem.successor(s.pop())
+        for state in problem.getNode():
+            s.push(state)
+        turn+=1
 
 # main
 problem = SingleFoodSearchProblem()
 filename = r'C:\Users\QUANG\OneDrive\Máy tính\input.txt'
 problem.readMaze(filename)
 bfs = bfs(problem)
-for path in [bfs]:
-    print(path)
+dfs = dfs(problem)
+for name,path,state,cost,turn in [bfs,dfs]:
+    print(name)
+    problem.printMaze(state)
+    print('\npath =',path)
+    print('\ncost =',cost)
+    print('\nTurn =',turn)
 
