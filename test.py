@@ -192,25 +192,56 @@ class SingleFoodSearchProblem:
                 if state[3][i + 1][j] == 3:
                     return self.node.append((state[0] + 1, state[1] + ',S,Stop', (i + 1, j), state[3].copy()))
 
-    def printMaze(self, state):
-        matrix_test = ''
-        matrix = state[3]
+    def printMaze(self, matrix) -> None:
+        matrix_text = ''
         for i in range(matrix.shape[0]):
             for j in range(matrix.shape[1]):
                 if matrix[i][j] == 0:
-                    matrix_test += '%'
+                    matrix_text += '%'
                 if matrix[i][j] == 1:
-                    matrix_test += ' '
+                    matrix_text += ' '
                 if matrix[i][j] == -1:
-                    matrix_test += colored('-', 'red')
+                    matrix_text += colored('-', 'red')
                 if i == self.initial_state[2][0] and j == self.initial_state[2][1]:
-                    matrix_test += colored('P', 'blue', attrs=['reverse', 'bold'])
+                    matrix_text += colored('P', 'blue', attrs=['reverse', 'bold'])
                 if matrix[i][j] == 3:
-                    matrix_test += colored('.', 'green', attrs=['reverse', 'bold'])
+                    matrix_text += colored('.', 'green', attrs=['reverse', 'bold'])
                 if matrix[i][j] == 4:
-                    matrix_test += '\n'
+                    matrix_text += '\n'
         
-        print(matrix_test)
+        print(matrix_text)
+    
+    def animate(self, action) -> None:
+        action_matrix = self.initial_state[3].copy()
+        i = self.initial_state[2][0]
+        j = self.initial_state[2][1]
+        for state in action:
+            if state != 'Stop':
+                if state == 'W':
+                    action_matrix[i][j-1] = -1
+                    self.printMaze(action_matrix)
+                    j = j - 1
+                    enter = input()
+                    os.system('cls')
+                if state == 'E':
+                    action_matrix[i][j+1] = -1
+                    self.printMaze(action_matrix)
+                    j = j + 1
+                    enter = input()
+                    os.system('cls')
+
+                if state == 'N':
+                    action_matrix[i-1][j] = -1
+                    self.printMaze(action_matrix)
+                    i = i - 1
+                    enter = input()
+                    os.system('cls')
+                if state == 'S':
+                    action_matrix[i+1][j] = -1
+                    self.printMaze(action_matrix)
+                    i = i + 1
+                    enter = input()
+                    os.system('cls')
 
 
 # BFS
@@ -279,8 +310,9 @@ dfs = dfs(problem)
 ucs = ucs(problem)
 for name,path,state,cost,turn in [bfs,dfs,ucs]:
     print(name)
-    problem.printMaze(state)
+    problem.printMaze(state[3])
     print('\npath =',path)
     print('\ncost =',cost)
-    print('\nTurn =',turn)
+    print('\nturn =',turn)
+        
 
