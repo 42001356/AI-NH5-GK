@@ -27,9 +27,9 @@ class SingleFoodSearchProblem:
         return state[1][len(state[1]) - 4:] == 'Stop'
 
     def pathCost(self, state: tuple):
-        if 'Stop' in state[1]:
-            return state[0]
-        return 'No path cost because no path to goal'
+        if 'Stop' not in state[1]:
+            return len(state[1].split(","))
+        return len(state[1].split(",")) - 1
 
     def readMaze(self, filename):
         i = 0
@@ -80,14 +80,14 @@ class SingleFoodSearchProblem:
                     self.node.append((state[0] + 1, state[1] + ',W', (i, j - 1), state[3].copy()))
                     state[3][i][j - 1] = 1
                 if state[3][i][j - 1] == 3:
-                    return self.node.append((state[0] + 1, state[1] + ',W,Stop', (i, j - 1), state[3].copy()))
+                    return self.node.append((state[0] + 1, state[1] + ',Stop', (i, j - 1), state[3].copy()))
                 # ->
                 if state[3][i][j + 1] == 1:
                     state[3][i][j + 1] = -1
                     self.node.append((state[0] + 1, state[1] + ',E', (i, j + 1), state[3].copy()))
                     state[3][i][j + 1] = 1
                 if state[3][i][j + 1] == 3:
-                    return self.node.append((state[0] + 1, state[1] + ',E,Stop', (i, j + 1), state[3].copy()))
+                    return self.node.append((state[0] + 1, state[1] + ',Stop', (i, j + 1), state[3].copy()))
             if i > 0 and i <= state[3].shape[0] - 2:
                 # ^
                 if state[3][i - 1][j] == 1:
@@ -95,14 +95,14 @@ class SingleFoodSearchProblem:
                     self.node.append((state[0] + 1, state[1] + ',N', (i - 1, j), state[3].copy()))
                     state[3][i - 1][j] = 1
                 if state[3][i - 1][j] == 3:
-                    return self.node.append((state[0] + 1, state[1] + ',N,Stop', (i - 1, j), state[3].copy()))
+                    return self.node.append((state[0] + 1, state[1] + ',Stop', (i - 1, j), state[3].copy()))
                 # v
                 if state[3][i + 1][j] == 1:
                     state[3][i + 1][j] = -1
                     self.node.append((state[0] + 1, state[1] + ',S', (i + 1, j), state[3].copy()))
                     state[3][i + 1][j] = 1
                 if state[3][i + 1][j] == 3:
-                    return self.node.append((state[0] + 1, state[1] + ',S,Stop', (i + 1, j), state[3].copy()))
+                    return self.node.append((state[0] + 1, state[1] + ',Stop', (i + 1, j), state[3].copy()))
 
     def printMaze(self, matrix) -> None:
         matrix_text = ''
@@ -183,9 +183,9 @@ class MultiFoodSearchProblem:
         return state[1].count('Stop') == (np.count_nonzero(state[3] == 3) + np.count_nonzero(state[3] == 5))
 
     def pathCost(self, state: tuple):
-        if state[1].count('Stop') == (np.count_nonzero(state[3] == 3) + np.count_nonzero(state[3] == 5)):
-            return state[0]
-        return 'No path cost because no path to goal'
+        if 'Stop' not in state[1]:
+            return len(state[1].split(","))
+        return len(state[1].split(",")) - 1
 
     def readMaze(self, filename):
         i = 0
@@ -237,7 +237,7 @@ class MultiFoodSearchProblem:
                     state[3][i][j - 1] = 1
                 if state[3][i][j - 1] == 3:
                     state[3][i][j-1] = 5
-                    self.node.append((state[0] + 1, state[1] + ',W,Stop', (i, j - 1), state[3].copy()))
+                    self.node.append((state[0] + 1, state[1] + ',Stop', (i, j - 1), state[3].copy()))
                 # ->
                 if state[3][i][j + 1] == 1:
                     state[3][i][j + 1] = -1
@@ -245,7 +245,7 @@ class MultiFoodSearchProblem:
                     state[3][i][j + 1] = 1
                 if state[3][i][j + 1] == 3:
                     state[3][i][j + 1] = 5
-                    self.node.append((state[0] + 1, state[1] + ',E,Stop', (i, j + 1), state[3].copy()))
+                    self.node.append((state[0] + 1, state[1] + ',Stop', (i, j + 1), state[3].copy()))
             if i > 0 and i <= state[3].shape[0] - 2:
                 # ^
                 if state[3][i - 1][j] == 1:
@@ -254,7 +254,7 @@ class MultiFoodSearchProblem:
                     state[3][i - 1][j] = 1
                 if state[3][i - 1][j] == 3:
                      state[3][i - 1][j] = 5
-                     self.node.append((state[0] + 1, state[1] + ',N,Stop', (i - 1, j), state[3].copy()))
+                     self.node.append((state[0] + 1, state[1] + ',Stop', (i - 1, j), state[3].copy()))
                 # v
                 if state[3][i + 1][j] == 1:
                     state[3][i + 1][j] = -1
@@ -262,7 +262,7 @@ class MultiFoodSearchProblem:
                     state[3][i + 1][j] = 1
                 if state[3][i + 1][j] == 3:
                     state[3][i + 1][j] == 5
-                    self.node.append((state[0] + 1, state[1] + ',S,Stop', (i + 1, j), state[3].copy()))
+                    self.node.append((state[0] + 1, state[1] + ',Stop', (i + 1, j), state[3].copy()))
 
     def printMaze(self, matrix) -> None:
         matrix_text = ''
