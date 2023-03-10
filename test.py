@@ -116,8 +116,6 @@ class SingleFoodSearchProblem:
         return state[1][len(state[1]) - 4:] == 'Stop'
 
     def pathCost(self, state: tuple):
-        if 'Stop' not in state[1]:
-            return len(state[1].split(","))
         return len(state[1].split(",")) - 1
 
     def readMaze(self, filename):
@@ -272,8 +270,6 @@ class MultiFoodSearchProblem:
         return state[1].count('Stop') == (np.count_nonzero(state[3] == 3) + np.count_nonzero(state[3] == 5))
 
     def pathCost(self, state: tuple):
-        if 'Stop' not in state[1]:
-            return len(state[1].split(","))
         return len(state[1].split(",")) - 1
 
     def readMaze(self, filename):
